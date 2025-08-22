@@ -9,56 +9,58 @@ import {
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 
-const ImagePickerField = ({ image = "", setImages }) => {
+const ImagePickerField = ({ image = null, setImage }) => {
   const pickImage = () => {
     if (Platform.OS === "web") {
       // Web: use input element
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
-      input.multiple = true;
       input.onchange = (e) => {
-        const files = Array.from(e.target.files);
-        const selected = files.map((file) => URL.createObjectURL(file));
-        setImages([...images, ...selected]);
+        const file = e.target.files[0];
+        if (file) {
+          const selected = URL.createObjectURL(file);
+          setImage(selected);
+        }
       };
       input.click();
     } else {
       // Mobile: use react-native-image-picker
       launchImageLibrary(
-        { mediaType: "photo", selectionLimit: 5 },
+        { mediaType: "photo", selectionLimit: 1 },
         (response) => {
           if (!response.didCancel && !response.errorCode) {
-            const selected = response.assets.map((asset) => asset.uri);
-            setImages([...images, ...selected]);
+            const selected = response.assets[0]?.uri;
+            setImage(selected);
           }
         }
       );
     }
   };
 
-  const removeImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
+  const removeImage = () => {
+    setImage(null);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Upload Images</Text>
+      <Text style={styles.label}>Upload Image</Text>
       <View style={styles.imageGrid}>
-        {images.map((uri, idx) => (
-          <View key={idx} style={styles.imageWrapper}>
-            <Image source={{ uri }} style={styles.image} />
+        {image ? (
+          <View style={styles.imageWrapper}>
+            <Image source={{ uri: image }} style={styles.image} />
             <TouchableOpacity
               style={styles.removeBtn}
-              onPress={() => removeImage(idx)}
+              onPress={removeImage}
             >
               <Text style={{ color: "white", fontSize: 12 }}>✕</Text>
             </TouchableOpacity>
           </View>
-        ))}
-        <TouchableOpacity onPress={pickImage} style={styles.addButton}>
-          <Text style={{ fontSize: 24 }}>+</Text>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={pickImage} style={styles.addButton}>
+            <Text style={{ fontSize: 24 }}>+</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -98,14 +100,9 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#ccc", // match main form
+    borderColor: "#ccc",
     alignItems: "center",
     justifyContent: "center",
-  },
-  addButtonText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#333",
   },
 });
 

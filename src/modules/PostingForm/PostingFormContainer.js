@@ -175,8 +175,10 @@ export default function PostingFormContainer() {
 
             {/* Image Picker */}
             <ImagePickerField
-                images={formData.image}
-                setImages={(newImages) => setFormData(prev => ({ ...prev, image: newImages }))}
+                image={formData.image}   // 👈 single value, not images
+                setImage={(newImage) =>
+                    setFormData((prev) => ({ ...prev, image: newImage }))
+                }
             />
 
 
