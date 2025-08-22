@@ -9,6 +9,7 @@ const HomePageContainer = () => {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text style={{ fontSize: 24, marginBottom: 20 }}>Welcome to Roommate Finder</Text>
       <Button title="Post Property" onPress={() => navigate("/post-property")} />
+      <Button title="Search" onPress={() => navigate("/search-form")} />
     </View>
   );
 }
