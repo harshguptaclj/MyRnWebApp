@@ -9,7 +9,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   resolve: {
-    extensions: ['.web.js', '.js', '.jsx'],
+    extensions: ['.web.js', '.js', '.jsx', ".ts", ".tsx", ".json"],
     alias: {
       'react-native$': 'react-native-web',
     },
@@ -26,6 +26,16 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         },
+      },
+      {
+        test: /\.[jt]sx?$/,
+        exclude: /node_modules\/(?!react-native-image-picker)/, 
+        use: "babel-loader",
+      },
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
       },
     ],
   },
