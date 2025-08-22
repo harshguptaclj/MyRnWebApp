@@ -7,24 +7,25 @@ const HomePageContainer = () => {
  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Roommate Finder</Text>
+      <Text style={styles.title}>Roommie Radar</Text>
          <Image
           source={{ uri: '/icons/Logo.jpg' }}
           style={styles.icon}
           resizeMode="contain"
         />
-        <TouchableOpacity
-          style={[styles.button, styles.primaryButton]}
-          onPress={() => navigate("/post-property")}
-        >
-          <Text style={styles.buttonText}>Post Property</Text>
-        </TouchableOpacity>
- 
+        
         <TouchableOpacity
           style={[styles.button, styles.secondaryButton]}
           onPress={() => navigate("/search-form")}
         >
-          <Text style={styles.buttonText}>Search</Text>
+          <Text style={styles.buttonText}>Search for Roommate</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={() => navigate("/post-property")}
+        >
+          <Text style={styles.buttonText}>Post a Room</Text>
         </TouchableOpacity>
     </View>
   );

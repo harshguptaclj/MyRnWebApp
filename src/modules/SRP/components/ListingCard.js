@@ -7,24 +7,24 @@ const ListingCard = ({item}) => {
     <View style={styles.card}>
       {/* Top image */}
       <Image
-        source={{ uri: item.image }} // replace with real image URL
+        source={{ uri: item?.image }} // replace with real image URL
         style={styles.image}
       />
 
       {/* Content */}
       <View style={styles.content}>
         <View style={styles.tagsRow}>
-          <Text style={styles.title}>{item.locality} • {item.price}</Text>
+          <Text style={styles.title}>{item?.locality} • {item?.price}</Text>
           <View style={[styles.tag, { backgroundColor: "#E6F4EA" }]}>
-            <Text style={[styles.tagText, { color: "#137333" }]}>{item.compatible}% Compatible</Text>
+            <Text style={[styles.tagText, { color: "#137333" }]}>{item?.score}% Compatible</Text>
           </View>
         </View>
-        <Text style={styles.subtitle}>{item.property_type} • {item.bhk}BHK • {item.furnished}</Text>
-        <Text style={styles.subtitle}>Looking for {item.gender}</Text>
+        <Text style={styles.subtitle}>{item?.property_type} • {item?.bhk}BHK • {item?.furnished}</Text>
+        <Text style={styles.subtitle}>Looking for {item?.gender}</Text>
 
         {/* Chips */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsRow}>
-          {item.amenities.map((chip, i) => (
+          {item?.amenities.map((chip, i) => (
             <View key={i} style={styles.chip}>
               <Text style={styles.chipText}>{chip}</Text>
             </View>
@@ -32,7 +32,7 @@ const ListingCard = ({item}) => {
         </ScrollView>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsRow}>
-          {item.highlights.map((chip, i) => (
+          {item?.highlights.map((chip, i) => (
             <View key={i} style={styles.chip}>
               <Text style={styles.chipText}>{chip}</Text>
             </View>

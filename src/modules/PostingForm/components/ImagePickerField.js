@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 
-const ImagePickerField = ({ images = [], setImages }) => {
+const ImagePickerField = ({ image = "", setImages }) => {
   const pickImage = () => {
     if (Platform.OS === "web") {
       // Web: use input element

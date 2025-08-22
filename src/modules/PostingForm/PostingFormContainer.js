@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Dropdown from "./components/Dropdown";
 import {
     View,
@@ -8,14 +8,40 @@ import {
     ScrollView,
     StyleSheet,
     Platform,
+    Image,
+    Pressable,
 } from "react-native";
 import Chip from "./components/Chip";
 import ImagePickerField from "./components/ImagePickerField";
 import DatePickerField from "./components/DatePickerFiled";
+import Header from "../CommonComponents/Header";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 
 export default function PostingFormContainer() {
+  const navigate = useNavigate();
+    const postData = async () => {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/listing/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)});
+    
+        const result = await response.json();
+        return result; // ✅ return parsed data
+        console.log("POST success:", result);
+    } catch (error) {
+        console.error("Error in POST:", error);
+    }
+    };
+
+    
+
+  
     // ✅ Single state for all form data
     const [formData, setFormData] = useState({
+        user_id :"user_123",
         city: "",
         locality: "",
         area: "",
@@ -24,7 +50,7 @@ export default function PostingFormContainer() {
         property_type: "apartment",
         gender: "",
         pet_friendly: "",
-        about_me: "",
+        about_me: "bfvfv",
         food_preference: "",
         move_in_date: "",
         smoking_drinking: "",
@@ -33,34 +59,11 @@ export default function PostingFormContainer() {
         description: "",
         rooms_vacant: 1,
         total_rooms: 1,
-        images: [],
+        image: "",
         furnished: "fully-furnished",
     });
 
-//     {
-//   "user_id": "user_123",
-//   "city": "Pune",
-//   "locality": "Koregaon Park",
-//   "area": "1200 sqft",
-//   "price": 15000,
-//   "bhk": 2,
-//   "property_type": "apartment",
-//   "gender": "male",
-//   "about_me": "Looking for a friendly roommate",
-//   "image": "https://example.com/image.jpg",
-//   "furnished": "fully-furnished",
-//   "description": "Spacious 2 BHK apartment",
-//   "rooms_vacant": 1,
-//   "total_rooms": 2,
-//   "food_preference": "veg",
-//   "pet_friendly": true,
-//   "smoking_drinking": "no",
-//   "highlights": ["Attached Washroom", "Market Nearby"],
-//   "amenities": ["Fridge", "WiFi", "AC"],
-//   "move_in_date": "2025-09-01"
-// }
 
-    // Static dropdown options
     const CITY = [
         "Delhi", "Mumbai", "Bangalore", "Hyderabad", "Pune",
         "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Lucknow",
@@ -68,7 +71,7 @@ export default function PostingFormContainer() {
     const LOCALITY = ["Indiranagar", "Koramangala", "Whitefield", "HSR Layout", "MG Road",
         "Andheri", "Bandra", "Juhu", "Powai", "Versova",
     ];
-    const BHK_OPTIONS = ["2 BHK", "3 BHK", "4 BHK", "5 BHK"];
+    const BHK_OPTIONS = [2,3,4,5];
 
     // 🔹 Generic updater
     const updateField = (field, value) => {
@@ -87,10 +90,42 @@ export default function PostingFormContainer() {
 
     const handleSubmit = () => {
         console.log("Form Submitted:", formData);
-        alert("Form Submitted ✅ (check console)");
+        postData();
+        navigate("/")
+        
+        //alert("Form Submitted ✅ (check console)");
+    };
+
+    // const handleDesc = () => {
+    //     // Call AI API here (mocked for now)
+    
+    //     descData();
+    //     setFormData((prev) => ({ ...prev, description: deData?.generated_description  || "Generated description from AI" }));
+    // };
+
+
+    const handleDesc = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/listing/generate-description", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)});
+    
+        const result = await response.json();
+        console.log("AI Descriptionsss:", result);
+        setFormData((prev) => ({ ...prev, description: result?.generated_description  || "Generated description from AI" }));
+
+        console.log("POST success:", result);
+    } catch (error) {
+        console.error("Error in POST:", error);
+    }
     };
 
     return (
+      <View style={{ flex: 1 }}>
+        <Header title="Roommie Radar" />
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Post a Roommate Requirement</Text>
             {/* Location */}
@@ -140,8 +175,8 @@ export default function PostingFormContainer() {
 
             {/* Image Picker */}
             <ImagePickerField
-                images={formData.images}
-                setImages={(newImages) => setFormData(prev => ({ ...prev, images: newImages }))}
+                images={formData.image}
+                setImages={(newImages) => setFormData(prev => ({ ...prev, image: newImages }))}
             />
 
 
@@ -194,7 +229,7 @@ export default function PostingFormContainer() {
             {/* Smoking / Drinking */}
             <Text style={styles.label}>Smoking / Drinking</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
-                {["Yes", "No", "Occasionally"].map((opt) => (
+                {["yes", "no", "occasionally"].map((opt) => (
                     <Chip
                         key={opt}
                         label={opt}
@@ -246,11 +281,25 @@ export default function PostingFormContainer() {
                 placeholder="Write details..."
             />
 
+
+              <View style={styles.descriptionView}>
+                 <Image
+                    source={{ uri: '/icons/ai.png' }}
+                    style={styles.icon}
+                    resizeMode="contain"
+                />
+                <Text style={styles.needHelp}>'Need help in writing ?'</Text>
+                <Pressable onPress={() =>{handleDesc()}}>
+                    <Text style={styles.yes}>'Yes, Write for me'</Text>
+                </Pressable>
+            </View>
+
             {/* Submit */}
             <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
                 <Text style={styles.submitText}>Submit</Text>
             </TouchableOpacity>
         </ScrollView>
+        </View>
     );
 }
 
@@ -286,7 +335,7 @@ const styles = StyleSheet.create({
     chipText: { fontSize: 14, color: "#333" },
     chipTextSelected: { color: "#fff" },
     submitBtn: {
-        backgroundColor: "#28a745",
+        backgroundColor: "#007BFF",
         padding: 15,
         borderRadius: 10,
         alignItems: "center",
@@ -294,4 +343,25 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     submitText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+    descriptionView: {
+        flexDirection: 'row',
+    },
+    needHelp: {
+        fontSize: 12,
+        lineHeight: 16,
+        fontWeight: 400,
+        color: '#42526e',
+        paddingLeft: 4
+    },
+    yes: {
+         fontSize: 14,
+        lineHeight: 16,
+        fontWeight: 600,
+        color: '#0078db',
+        paddingLeft: 8
+    },
+    icon: {
+        height: 16,
+        width: 16,
+    }
 });

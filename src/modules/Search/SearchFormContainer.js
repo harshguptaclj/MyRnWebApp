@@ -14,31 +14,33 @@ import Chip from "./components/Chip";
 import ImagePickerField from "./components/ImagePickerField";
 import DatePickerField from "./components/DatePickerFiled";
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import Header from "../CommonComponents/Header";
 
 export default function SearchFormContainer() {
     const navigate = useNavigate();
     // ✅ Single state for all form data
     const [formData, setFormData] = useState({
-        city: "",
-        locality: "",
-        area: "",
-        price: "",
-        bhk: "",
-        property_type: "apartment",
-        gender: "",
-        pet_friendly: "",
-        about_me: "",
-        food_preference: "",
-        move_in_date: "",
-        smoking_drinking: "",
-        highlights: [],
-        amenities: [],
-        description: "",
-        rooms_vacant: 1,
-        total_rooms: 1,
-        images: [],
-        furnished: "fully-furnished",
-    });
+            user_id :"user_123",
+            city: "",
+            locality: "",
+            area: "",
+            price: "",
+            bhk: "",
+            property_type: "apartment",
+            gender: "",
+            pet_friendly: "",
+            about_me: "bfvfv",
+            food_preference: "",
+            // move_in_date: "",
+            smoking_drinking: "",
+            highlights: [],
+            amenities: [],
+            description: "",
+            rooms_vacant: 1,
+            total_rooms: 1,
+            images: [],
+            furnished: "fully-furnished",
+        });
 
 
     // Static dropdown options
@@ -49,7 +51,7 @@ export default function SearchFormContainer() {
     const LOCALITY = ["Indiranagar", "Koramangala", "Whitefield", "HSR Layout", "MG Road",
         "Andheri", "Bandra", "Juhu", "Powai", "Versova",
     ];
-    const BHK_OPTIONS = ["2 BHK", "3 BHK", "4 BHK", "5 BHK"];
+    const BHK_OPTIONS = [2,3,4,5];
 
     // 🔹 Generic updater
     const updateField = (field, value) => {
@@ -72,6 +74,8 @@ export default function SearchFormContainer() {
     };
 
     return (
+      <View style={{ flex: 1 }}>
+        <Header title="Roommie Radar" />    
         <ScrollView style={styles.container}>
             <Text style={styles.heading}>Search for a Roommate</Text>
             {/* Location */}
@@ -99,37 +103,29 @@ export default function SearchFormContainer() {
             />
 
             {/* Rent */}
-            <Text style={styles.label}>Rent (₹)</Text>
+            <Text style={styles.label}>Budget (₹)</Text>
             <TextInput
                 style={styles.input}
                 keyboardType="numeric"
                 value={formData.price}
                 onChangeText={(val) => updateField("price", val)}
-                placeholder="Enter rent"
+                placeholder="Enter Approx Budget in ₹"
             />
 
-            {/* Area */}
-            <Text style={styles.label}>Area (sq ft)</Text>
-            <TextInput
-                style={styles.input}
-                keyboardType="numeric"
-                value={formData.area}
-                onChangeText={(val) => updateField("area", val)}
-                placeholder="Enter area in sqft"
-            />
-
-
-            {/* Image Picker */}
-            <ImagePickerField
-                images={formData.images}
-                setImages={(newImages) => setFormData(prev => ({ ...prev, images: newImages }))}
-            />
+             <Text style={styles.label}>Area (sq ft)</Text>
+                <TextInput
+                    style={styles.input}
+                    keyboardType="numeric"
+                    value={formData.area}
+                    onChangeText={(val) => updateField("area", val)}
+                    placeholder="Enter area in sqft"
+                />
 
 
             {/* Looking For */}
-            <Text style={styles.label}>Looking For</Text>
+            <Text style={styles.label}>Gender</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
-                {["Male", "Female", "Any"].map((opt) => (
+                {["Male", "Female"].map((opt) => (
                     <Chip
                         key={opt}
                         label={opt}
@@ -140,7 +136,7 @@ export default function SearchFormContainer() {
             </ScrollView>
 
             {/* Pet Friendly */}
-            <Text style={styles.label}>Pet Friendly</Text>
+            <Text style={styles.label}>Do you have pets?</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
                 {["Yes", "No"].map((opt) => (
                     <Chip
@@ -165,17 +161,11 @@ export default function SearchFormContainer() {
                 ))}
             </ScrollView>
 
-            {/* Available From (TEMP TEXT FIELD instead of Date Picker) */}
-            <Text style={styles.label}>Available From</Text>
-            <DatePickerField
-                value={formData.move_in_date}
-                onChange={(val) => updateField("move_in_date", val)}
-            />
 
             {/* Smoking / Drinking */}
-            <Text style={styles.label}>Smoking / Drinking</Text>
+            <Text style={styles.label}>Do you Smoke / Drink?</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipContainer}>
-                {["Yes", "No", "Occasionally"].map((opt) => (
+                {["yes", "no", "occasionally"].map((opt) => (
                     <Chip
                         key={opt}
                         label={opt}
@@ -186,7 +176,7 @@ export default function SearchFormContainer() {
             </ScrollView>
 
             {/* Highlights */}
-            <Text style={styles.label}>Choose Highlights</Text>
+            <Text style={styles.label}>Choose Required Highlights</Text>
             <View style={styles.chipWrapContainer}>
                 {[
                     "Attached Washroom",
@@ -206,7 +196,7 @@ export default function SearchFormContainer() {
 
 
             {/* Amenities */}
-            <Text style={styles.label}>Amenities</Text>
+            <Text style={styles.label}>Amenities Required?</Text>
             <View style={styles.chipWrapContainer}>
                 {["Fridge", "Kitchen", "WiFi", "Washing Machine", "Cook", "AC"].map((opt) => (
                     <Chip
@@ -217,22 +207,14 @@ export default function SearchFormContainer() {
                     />
                 ))}
             </View>
-            {/* Description */}
-            <Text style={styles.label}>Description</Text>
-            <TextInput
-                style={[styles.input, { height: 100 }]}
-                multiline
-                value={formData.description}
-                onChangeText={(val) => updateField("description", val)}
-                placeholder="Write details..."
-            />
 
             {/* Submit */}
-            <TouchableOpacity style={styles.submitBtn} onPress={() => navigate("/search")}>
+            <TouchableOpacity style={styles.submitBtn} onPress={() => navigate("/search", { state: { formData } })}>
                 <Text style={styles.submitText}>Search</Text>
             </TouchableOpacity>
 
         </ScrollView>
+        </View>
     );
 }
 
