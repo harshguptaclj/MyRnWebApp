@@ -15,7 +15,7 @@ export default function DatePickerField({ value, onChange }) {
           borderRadius: 8,
           border: "1px solid #ccc",
           marginBottom: 10,
-          width: "100%",
+          width: "60%",
         }}
       />
     );

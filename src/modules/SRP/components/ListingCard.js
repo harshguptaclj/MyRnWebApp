@@ -1,10 +1,31 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Pressable } from "react-native";
+import { useNavigate } from "react-router-dom";
 
 const ListingCard = ({item}) => {
-  console.log("props", item)
+
+  const navigate = useNavigate();
+
+    const getPropertyData = async () => {
+
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/listing/${item?._id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        });
+
+        const property = await response.json();
+        navigate("/property-detail", { state: { property } })
+        
+    } catch (error) {
+        console.error("Error in GET:", error);
+    }
+  };
+
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={getPropertyData}>
       {/* Top image */}
       <Image
         source={{ uri: item?.image }} // replace with real image URL
@@ -40,16 +61,16 @@ const ListingCard = ({item}) => {
         </ScrollView>
 
         {/* Buttons */}
-        <View style={styles.buttonRow}>
+        {/* <View style={styles.buttonRow}>
           <TouchableOpacity style={[styles.button, styles.outlineButton]}>
             <Text style={[styles.buttonText, { color: "#1A73E8" }]}>View Profile</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={[styles.button, styles.fillButton]}>
-            <Text style={[styles.buttonText, { color: "#fff" }]}>Message</Text>
+            <Text style={[styles.buttonText, { color: "#fff" }]}>View Number</Text>
           </TouchableOpacity>
-        </View>
+        {/* </View> */}
       </View>
-    </View>
+    </Pressable>
   );
 };
 

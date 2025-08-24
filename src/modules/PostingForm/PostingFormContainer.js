@@ -28,9 +28,9 @@ export default function PostingFormContainer() {
         },
         body: JSON.stringify(formData)});
     
-        const result = await response.json();
-        return result; // ✅ return parsed data
-        console.log("POST success:", result);
+        const property = await response.json();
+        navigate("/property-detail", { state: { property } })
+        console.log("POST success:", property);
     } catch (error) {
         console.error("Error in POST:", error);
     }
@@ -88,22 +88,6 @@ export default function PostingFormContainer() {
         });
     };
 
-    const handleSubmit = () => {
-        console.log("Form Submitted:", formData);
-        postData();
-        navigate("/")
-        
-        //alert("Form Submitted ✅ (check console)");
-    };
-
-    // const handleDesc = () => {
-    //     // Call AI API here (mocked for now)
-    
-    //     descData();
-    //     setFormData((prev) => ({ ...prev, description: deData?.generated_description  || "Generated description from AI" }));
-    // };
-
-
     const handleDesc = async () => {
     try {
         const response = await fetch("http://localhost:8000/listing/generate-description", {
@@ -114,7 +98,7 @@ export default function PostingFormContainer() {
         body: JSON.stringify(formData)});
     
         const result = await response.json();
-        console.log("AI Descriptionsss:", result);
+
         setFormData((prev) => ({ ...prev, description: result?.generated_description  || "Generated description from AI" }));
 
         console.log("POST success:", result);
@@ -291,13 +275,13 @@ export default function PostingFormContainer() {
                     resizeMode="contain"
                 />
                 <Text style={styles.needHelp}>'Need help in writing ?'</Text>
-                <Pressable onPress={() =>{handleDesc()}}>
+                <Pressable onPress={handleDesc}>
                     <Text style={styles.yes}>'Yes, Write for me'</Text>
                 </Pressable>
             </View>
 
             {/* Submit */}
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+            <TouchableOpacity style={styles.submitBtn} onPress={postData}>
                 <Text style={styles.submitText}>Submit</Text>
             </TouchableOpacity>
         </ScrollView>

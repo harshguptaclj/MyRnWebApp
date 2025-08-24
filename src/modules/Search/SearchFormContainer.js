@@ -68,11 +68,6 @@ export default function SearchFormContainer() {
         });
     };
 
-    const handleSubmit = () => {
-        console.log("Form Submitted:", formData);
-        alert("Form Submitted ✅ (check console)");
-    };
-
     return (
       <View style={{ flex: 1 }}>
         <Header title="Roommie Radar" />    

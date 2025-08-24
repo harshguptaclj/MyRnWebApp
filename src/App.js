@@ -5,6 +5,7 @@ import HomePageContainer from "./modules/HomePage/HomePageContainer";
 import PostingFormContainer from "./modules/PostingForm/PostingFormContainer";
 import SearchFormContainer from "./modules/Search/SearchFormContainer";
 import SRPContainer from "./modules/SRP/SRPContainer";
+import PropertyDetailContainer from "./modules/PDPage/PropertyDetailContainer";
 
 
 
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/post-property" element={<PostingFormContainer />} />
         <Route path="/search" element={<SRPContainer />} />
         <Route path="/search-form" element={<SearchFormContainer />} />
+        <Route path="/property-detail" element={<PropertyDetailContainer />} />
       </Routes>
     </Router>
   );
